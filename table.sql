@@ -47,7 +47,7 @@ ALTER TABLE Bookings
 ADD COLUMN booking_description TEXT;
 
 ALTER TABLE Bookings
-DROP COLUMN booking_destination; 
+DROP COLUMN booking_description; 
 SELECT * FROM Bookings;
 
 INSERT INTO Bookings (user_id, venue_id, booking_date, payment_status)
@@ -56,6 +56,7 @@ VALUES (2, 3, '2023-12-01', 'unpaid');
 UPDATE Bookings
 SET payment_status = 'paid'
 WHERE booking_id = 1;
+SELECT * FROM Bookings; 
 
 DELETE FROM Bookings
 WHERE booking_id = 2;
