@@ -37,9 +37,26 @@ CREATE TABLE Payments (
     FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id)
 );
 
+INSERT INTO Bookings (user_id, venue_id, booking_date, payment_status)
+VALUES
+    (1, 1, '2023-10-20', 'paid'),
+    (2, 2, '2023-11-05', 'unpaid'),
+    (3, 3, '2023-12-15', 'paid');
+
 ALTER TABLE Bookings
 ADD COLUMN booking_description TEXT;
 
 ALTER TABLE Bookings
 DROP COLUMN booking_description; 
 SELECT * FROM Bookings;
+
+INSERT INTO Bookings (user_id, venue_id, booking_date, payment_status)
+VALUES (2, 3, '2023-12-01', 'unpaid');	
+
+UPDATE Bookings
+SET payment_status = 'paid'
+WHERE booking_id = 1;
+SELECT * FROM Bookings; 
+
+DELETE FROM Bookings
+WHERE booking_id = 2;
