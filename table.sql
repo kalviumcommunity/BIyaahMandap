@@ -43,20 +43,22 @@ VALUES
     (2, 2, '2023-11-05', 'unpaid'),
     (3, 3, '2023-12-15', 'paid');
 
-ALTER TABLE Bookings
-ADD COLUMN booking_description TEXT;
+UPDATE Venues
+SET venue_vacancy = venue_vacancy - 1 
+WHERE venue_id = 1;
 
-ALTER TABLE Bookings
-DROP COLUMN booking_description; 
-SELECT * FROM Bookings;
-
-INSERT INTO Bookings (user_id, venue_id, booking_date, payment_status)
-VALUES (2, 3, '2023-12-01', 'unpaid');
+INSERT INTO Payments (user_id, booking_id, payment_date, amount)
+VALUES (1,1, '2023-12-01', 5000.00);
 
 UPDATE Bookings
 SET payment_status = 'paid'
-WHERE booking_id = 1;
-SELECT * FROM Bookings; 
+WHERE booking_id = 1; 
 
-DELETE FROM Bookings
-WHERE booking_id = 2;
+SELECT b.booking_id, b.booking_date, v.venue_name
+FROM Bookings b 
+JOIN Venues v ON b.venue_id = v.venue_id
+WHERE b.user_id = 1;
+
+SELECT user_id, (SELECT SUM(amount) FROM Payments WHERE user_id = 1) AS total_paid
+FROM Users
+WHERE user_id = 1; 
