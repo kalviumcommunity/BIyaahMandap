@@ -48,7 +48,8 @@ SET venue_vacancy = venue_vacancy - 1
 WHERE venue_id = 1;
 
 INSERT INTO Payments (user_id, booking_id, payment_date, amount)
-VALUES (1, 1, '2023-12-01', 5000.00);
+
+VALUES (1,1, '2023-12-01', 5000.00);
 
 UPDATE Bookings
 SET payment_status = 'paid'
@@ -57,6 +58,7 @@ WHERE booking_id = 1;
 SELECT b.booking_id, b.booking_date, v.venue_name
 FROM Bookings b 
 JOIN Venues v ON b.venue_id = v.venue_id
+
 WHERE b.user_id = 1 AND b.booking_id IN (SELECT booking_id FROM Payments);
 
 SELECT user_id, 
