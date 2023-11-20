@@ -1,11 +1,11 @@
-CREATE DATABASE BiyaahMandap; 
+CREATE DATABASE BiyaahMandap;
 
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'user') NOT NULL
+    role ENUM('admin', 'user', 'manager') NOT NULL 
 );
 
 CREATE TABLE Venues (
@@ -37,26 +37,20 @@ CREATE TABLE Payments (
     FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id)
 );
 
-INSERT INTO Bookings (user_id, venue_id, booking_date, payment_status)
+INSERT INTO Users (username, password, email, role)
 VALUES
-    (1, 1, '2023-10-20', 'paid'),
-    (2, 2, '2023-11-05', 'unpaid'),
-    (3, 3, '2023-12-15', 'paid');
+    ('admin1', 'adminpass', 'admin1@example.com', 'admin'),
+    ('user1', 'userpass', 'user1@example.com', 'user'),
+    ('manager1', 'managerpass', 'manager1@example.com', 'manager');
 
-ALTER TABLE Bookings
-ADD COLUMN booking_description TEXT;
+SELECT b.booking_id, b.booking_date, v.venue_name
+FROM Bookings b 
+JOIN Venues v ON b.venue_id = v.venue_id
+WHERE b.user_id = 1 AND b.booking_id IN (SELECT booking_id FROM Payments)
+AND (SELECT role FROM Users WHERE user_id = 1) = 'admin';
 
-ALTER TABLE Bookings
-DROP COLUMN booking_description; 
-SELECT * FROM Bookings;
 
-INSERT INTO Bookings (user_id, venue_id, booking_date, payment_status)
-VALUES (2, 3, '2023-12-01', 'unpaid');
-
-UPDATE Bookings
-SET payment_status = 'paid'
-WHERE booking_id = 1;
-SELECT * FROM Bookings; 
-
-DELETE FROM Bookings
-WHERE booking_id = 2;
+SELECT user_id, 
+       (SELECT COALESCE(SUM(amount), 0) FROM Payments WHERE user_id = 1) AS total_paid
+FROM Users
+WHERE user_id = 1 AND role = 'manager';
